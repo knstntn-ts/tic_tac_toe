@@ -1,14 +1,19 @@
+# Define empty board. It is modified as the game goes on
 board = [[' ', ' ', ' '],
          [' ', ' ', ' '],
          [' ', ' ', ' ']]
+# Set first turn to X
 turn = 'X'
 
+# Arrays of positions of put elements
 x_pos = []
 o_pos = []
 
+# Winner variable
 winner = ['']
 
 
+# Helper function to display the board in console
 def display_board(board_in):
     board_temp = ""
     for row in range(3):
@@ -23,16 +28,18 @@ def display_board(board_in):
     print(f'{board_temp}\n')
 
 
+# Putting element (either O or X) to the board
 def put_element(element, coord_in):
     board[coord_in[0] - 1][coord_in[1] - 1] = element
 
-    # save the coordinates of the elements for checking the winner
+    # Save the coordinates of the elements for checking the winner
     if element == 'X':
         x_pos.append(coord_in)
     else:
         o_pos.append(coord_in)
 
 
+# Check if the position is occupied
 def check_coord(coord_in):
     # check if the square filled with something other than empty space
     if board[coord_in[0] - 1][coord_in[1] - 1] != ' ':
@@ -41,8 +48,10 @@ def check_coord(coord_in):
     return True
 
 
+# Read the coordinates where user wants to put their element
 def get_coords(turn_in, situation=''):
-    # get coordinates from the user
+
+    # Get coordinates from the user
     if situation == 'w_coords':
         coord_out = input(f"Occupied element. Enter again. {turn_in}'s coordinates\n")
     else:
@@ -51,6 +60,7 @@ def get_coords(turn_in, situation=''):
     return coord_out
 
 
+# Checking the winner, returns 'w'
 def check_winner(turn_in):
     # check if there is a horizontal connection
     if turn_in == 'X':
@@ -66,6 +76,16 @@ def check_winner(turn_in):
     return 'W'
 
 
+# Check if it is a tie
+def tie():
+    if len(x_pos) >= 5:
+        return True
+    return False
+
+# --- FUNCTIONS FOR CHECKING CONNECTED ELEMENTS --- #
+
+
+# Check for horizontally connected elements
 def hor_conn(positions):
     i = 0
     rows = [0] * 3
@@ -75,6 +95,7 @@ def hor_conn(positions):
     return True if 3 in rows else False
 
 
+# Check for vertically connected elements
 def ver_conn(positions):
     i = 0
     cols = [0] * 3
@@ -84,6 +105,7 @@ def ver_conn(positions):
     return True if 3 in cols else False
 
 
+# Check for diagonally connected elements
 def diag_conn(positions):
     dig = [[[1, 1], [2, 2], [3, 3]], [[2, 2], [1, 3], [3, 1]]]
     ds = [[0], [0]]
@@ -99,11 +121,7 @@ def diag_conn(positions):
     return False
 
 
-def tie():
-    if len(x_pos) >= 5:
-        return True
-    return False
-
+# --- MAIN LOOP --- #
 
 if __name__ == '__main__':
     print('\n\nWelcome to tic-tac-toe! X"s turn. Enter the coordinates where you want to put it. (Example: 1 1 is '
@@ -111,8 +129,9 @@ if __name__ == '__main__':
 
     coord = get_coords(turn)
 
+    # coord = 1111 stops the game
     while coord != 1111:
-        # prepare the format of the coordinates
+        # Prepare the format of the coordinates
         coord_list = [int(c) for c in coord.split()]
 
         # Check if the coordinate is not occupied
@@ -139,5 +158,5 @@ if __name__ == '__main__':
             print(f"{winner[0]} is the Winner!")
             break
 
-        # ask for the next person's turn
+        # Ask for the next person's turn
         coord = input(f"{turn}'s coordinates\n")
